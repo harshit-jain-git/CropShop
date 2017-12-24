@@ -1,0 +1,43 @@
+{
+  "manifest_version": 2,
+  "name": "Shopper'sSnap",
+  "version": "1.0",
+
+  "default_locale": "en",
+  "description": "An extension to find dress similar to a given dress ...",
+
+  "icons": {
+    "16": "Images/Shopper'sSnap-16x16.png",
+    "32": "Images/Shopper'sSnap-32x32.png",
+    "128": "Images/Shopper'sSnap.jpg"
+  },
+
+  "browser_action": {
+    "default_icon": {
+      "16": "Images/Shopper'sSnap-16x16.png",
+      "32": "Images/Shopper'sSnap-32x32.png"
+    },
+    "default_title": "Shopper'sSnap",
+    "default_popup": "popup.html"
+  },
+
+  "author": {
+    "1": "Harshit Jain",
+    "2": "Sarvesh Nalawade",
+    "3": "Sankalp Garg"
+  },
+
+  "background": {
+    "persistent": false
+  },
+
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Ctrl+S",
+        "mac": "MacCtrl+S"
+      },
+      "description": "Opens popup.html"
+    }
+  }
+}

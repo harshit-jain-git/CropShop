@@ -1,0 +1,18 @@
+.heading {
+    width: 100%;
+    color: #ffe8a1;
+    font-family: Chiller;
+    font-size: 200%;
+    margin-left: 42%;
+}
+
+.description p {
+    text-align: center;
+}
+
+.buttons {
+    text-align: center;
+}
+.buttons button {
+    border-radius: 2px;
+}
