@@ -1,5 +1,5 @@
 
-# Screenshot Capture / Chrome Extension
+# CropShop / Chrome Extension
 
 
 ## [Install][1]
@@ -8,11 +8,7 @@
 ## Features
 
 - Capture Viewport
-- Crop and Save (automatic save)
-- Crop and Wait (manual save)
 - Configurable Keyboard Shortcut
-- Preserve or downscale screenshot size on HDPI displays like Retina
-- Unique screenshot date/time file name
 - Save screenshots in PNG file format
 - No special permissions required
 - Open Source
@@ -25,14 +21,14 @@
 
 > Alternatively:
 
-1. Navigate to `chrome://extensions` and find the Screenshot Capture extension.
-2. Click on the `Options` link under the Screenshot Capture extension.
+1. Navigate to `chrome://extensions` and find the CropShop extension.
+2. Click on the `Options` link under the CropShop extension.
 
 
 ## Keyboard Shortcut
 
 1. Navigate to `chrome://extensions` and scroll down to the bottom of the page.
-2. Click on `Keyboard shortcuts` and set a key combination for Screenshot Capture.
+2. Click on `Keyboard shortcuts` and set a key combination for CropShop.
 
 
 ## License
@@ -60,4 +56,4 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-  [1]: https://chrome.google.com/webstore/detail/screenshot-capture/giabbpobpebjfegnpcclkocepcgockkc
+  [1]: // chrome store link to be updated here.
