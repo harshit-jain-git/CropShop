@@ -1,0 +1,100 @@
+
+/*sticky footer*/
+html, body {
+  height: 100%;
+}
+#wrapper {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -52px;
+}
+footer, #footer-push {
+  height: 20px;
+  text-align: center;
+}
+
+/*center content on large screens*/
+.mdl-layout__header-row,
+.mdl-layout__content,
+.mdl-mega-footer__bottom-section {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.mdl-layout__content {
+  display: block;
+  padding-bottom: 50px;
+}
+
+/*header*/
+.mdl-layout__header-row { padding: 0 20px; }
+
+/*footer*/
+.mdl-mega-footer__bottom-section { padding: 0; }
+.mdl-mega-footer__link-list { display: flex; justify-content: center; margin: 0 auto; }
+.mdl-mega-footer__link-list li:last-child { margin: 0; }
+.mdl-mega-footer__link-list li:nth-of-type(1) a:before { font-size: 17px; }
+.mdl-mega-footer__link-list li:nth-of-type(2) a { position: relative; top: -2px; }
+.mdl-mega-footer__link-list li:nth-of-type(2) a:before {
+  font-size: 20px; position: relative; top: 1px;
+}
+
+
+/*screenshot-capture*/
+
+
+/*common*/
+body { letter-spacing: 0.2px; }
+p {
+  font-size: 16px;
+  letter-spacing: 0.2px;
+}
+
+
+/*capture-method*/
+h4 { margin-bottom: 0; }
+h4:after { content: ''; display: block; clear: both; }
+h4 span {
+  font-size: 16px; line-height: 32px; font-weight: normal;
+  display: inline-block; float: right;
+}
+code { background: #ececec; padding: 5px; border-radius: 5px; }
+
+.mdl-radio {
+  transition-duration: .28s;
+  transition-timing-function: cubic-bezier(.4,0,.2,1);
+  transition-property: background-color;
+  width: 100%; max-width: 400px; cursor: pointer;
+  padding: 10px 10px 10px 44px;
+  border-radius: 3px;
+}
+.mdl-radio:hover { background: #eee; }
+.mdl-radio.is-checked { background: #eee; }
+
+.mdl-radio__outer-circle { top: 14px; left: 20px; }
+.mdl-radio__inner-circle { top: 18px; left: 24px; }
+.mdl-radio__ripple-container { top: 1px; left: 7px; }
+
+.mdl-radio__label { padding: 0 0 0 20px; }
+.mdl-radio__label em {
+  position: relative; top: -1px;
+  font-style: normal; padding: 0 10px 0 0;
+}
+
+
+/*bootstrap callout*/
+.bs-callout {
+  padding: 20px;
+  margin: 20px 0 0;
+  border: 1px solid #eee;
+  border-left-width: 5px;
+  border-left-color: #607d8b;
+  border-radius: 3px;
+  background: #fcfcfc;
+}
+.bs-callout h4 {
+  margin-top: 0;
+}
+.bs-callout .mdl-cell {
+  margin-left: 0px;
+}
