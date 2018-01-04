@@ -2,9 +2,6 @@
 # CropShop / Chrome Extension
 
 
-## [Install][1]
-
-
 ## Features
 
 - Capture Viewport
