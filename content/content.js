@@ -8,26 +8,26 @@ var overlay = ((active) => (state) => {
 })(false)
 
 makeblob = function (dataURL) {
-            var BASE64_MARKER = ';base64,';
-            if (dataURL.indexOf(BASE64_MARKER) == -1) {
-                var parts = dataURL.split(',');
-                var contentType = parts[0].split(':')[1];
-                var raw = decodeURIComponent(parts[1]);
-                return new Blob([raw], { type: contentType });
-            }
-            var parts = dataURL.split(BASE64_MARKER);
-            var contentType = parts[0].split(':')[1];
-            var raw = window.atob(parts[1]);
-            var rawLength = raw.length;
+    var BASE64_MARKER = ';base64,';
+    if (dataURL.indexOf(BASE64_MARKER) == -1) {
+        var parts = dataURL.split(',');
+        var contentType = parts[0].split(':')[1];
+        var raw = decodeURIComponent(parts[1]);
+        return new Blob([raw], { type: contentType });
+    }
+    var parts = dataURL.split(BASE64_MARKER);
+    var contentType = parts[0].split(':')[1];
+    var raw = window.atob(parts[1]);
+    var rawLength = raw.length;
 
-            var uInt8Array = new Uint8Array(rawLength);
+    var uInt8Array = new Uint8Array(rawLength);
 
-            for (var i = 0; i < rawLength; ++i) {
-                uInt8Array[i] = raw.charCodeAt(i);
-            }
+    for (var i = 0; i < rawLength; ++i) {
+        uInt8Array[i] = raw.charCodeAt(i);
+    }
 
-            return new Blob([uInt8Array], { type: contentType });
-        }
+    return new Blob([uInt8Array], { type: contentType });
+}
 
 var image = (done) => {
   var image = new Image()
@@ -143,7 +143,7 @@ function processImage() {
 
             // Request headers.
             beforeSend: function(xhrObj){
-                xhrObj.setRequestHeader("Content-Type","application/json");
+                xhrObj.setRequestHeader("Content-Type","application/octet-stream");
                 xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", subscriptionKey);
             },
 
