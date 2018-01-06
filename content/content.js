@@ -123,16 +123,15 @@ var save = (image) => {
 var urls;
 function AnalyzeJson(obj)
 {
-	var urls = []
-  	var items = JSON.parse(obj).items;
-  	for(var i = 0; i < 10; i++) {
-    	urls.push(items[i].link);
-  	}
-	console.log(urls);
-	/*chrome.runtime.sendMessage({
-		"message":
-		"urls":urls
-	})*/
+  var urls = []
+  var items = JSON.parse(obj).items;
+  for(var i = 0; i < 10; i++) {
+    urls.push(items[i].link);
+  }
+  chrome.runtime.sendMessage({
+    message: 'search_urls',
+    urls: urls
+  })
 }
 
 function httpGetAsync(theUrl, callback)
@@ -147,27 +146,27 @@ function httpGetAsync(theUrl, callback)
 }
 
 function thread_genius(getUrl) {
-  	$.ajax({
-	    url: "https://api.threadgenius.co/v1/prediction/tag",
-	    beforeSend: function(xhr) {
-	      	xhr.setRequestHeader("Authorization", "Basic " + btoa("key_NTQ1NWFhZTZkMjYzMWU0MDExNjE0ZWI1M2Y0NDFm:"));
-	    },
-	    type: 'POST',
-	    contentType: 'application/json',
-	    processData: false,
-	    data: '{"image": {"base64": "' + base64_image + '"}}',
-	    success: function (data) {
-	      	var query = "";
-	      	var tags = data.response.prediction.data.tags;
-	      	for(var i = 0; i < 4; i++) {
-	        	query += tags[i].name + " ";
-	      	}
-	      	getUrl("https://www.googleapis.com/customsearch/v1?key= AIzaSyDYiO4T58S8k11u-PpvTCy1bT71h7kzPbQ&cx=005433110352445806458:ben4cv6cbgs&q=" + query, AnalyzeJson);
-	    },
-	    error: function(){
-	    	console.log("Cannot get data");
-	    }
-  	})
+  $.ajax({
+    url: "https://api.threadgenius.co/v1/prediction/tag",
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader("Authorization", "Basic " + btoa("key_NTQ1NWFhZTZkMjYzMWU0MDExNjE0ZWI1M2Y0NDFm:"));
+    },
+    type: 'POST',
+    contentType: 'application/json',
+    processData: false,
+    data: '{"image": {"base64": "' + base64_image + '"}}',
+    success: function (data) {
+      var query = "";
+      var tags = data.response.prediction.data.tags;
+      for(var i = 0; i < 4; i++) {
+        query += tags[i].name + " ";
+      }
+      getUrl("https://www.googleapis.com/customsearch/v1?key= AIzaSyDYiO4T58S8k11u-PpvTCy1bT71h7kzPbQ&cx=005433110352445806458:ben4cv6cbgs&q=" + query, AnalyzeJson);
+    },
+    error: function(){
+      console.log("Cannot get data");
+    }
+  })
 }
 
 window.addEventListener('resize', ((timeout) => () => {
