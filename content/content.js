@@ -67,7 +67,6 @@ var init = (done) => {
         selection.x2, selection.y2
       ])
     }
-
     done && done()
   })
 }
@@ -75,27 +74,27 @@ var init = (done) => {
 var capture = (force) => {
   chrome.storage.sync.get((config) => {
     if (selection && (config.method === 'crop' || (config.method === 'wait' && force))) {
-    jcrop.release()
-    setTimeout(() => {
+      jcrop.release()
+      setTimeout(() => {
+        chrome.runtime.sendMessage({
+          message: 'capture', area: selection, dpr: devicePixelRatio
+        }, (res) => {
+          overlay(false)
+          selection = null
+          save(res.image)
+        })
+      }, 50)
+    }
+    else if (config.method === 'view') {
       chrome.runtime.sendMessage({
-      message: 'capture', area: selection, dpr: devicePixelRatio
-    }, (res) => {
-      overlay(false)
-    selection = null
-    save(res.image)
+        message: 'capture',
+        area: {x: 0, y: 0, w: innerWidth, h: innerHeight}, dpr: devicePixelRatio
+      }, (res) => {
+        overlay(false)
+        save(res.image)
+      })
+    }
   })
-  }, 50)
-  }
-else if (config.method === 'view') {
-    chrome.runtime.sendMessage({
-      message: 'capture',
-      area: {x: 0, y: 0, w: innerWidth, h: innerHeight}, dpr: devicePixelRatio
-    }, (res) => {
-      overlay(false)
-    save(res.image)
-  })
-  }
-})
 }
 
 var filename = () => {
@@ -173,24 +172,24 @@ window.addEventListener('resize', ((timeout) => () => {
   clearTimeout(timeout)
   timeout = setTimeout(() => {
     jcrop.destroy()
-  init(() => overlay(null))
-}, 100)
+    init(() => overlay(null))
+  }, 100)
 })())
 
 chrome.runtime.onMessage.addListener((req, sender, res) => {
   if (req.message === 'init') {
-  res({}) // prevent re-injecting
+    res({}) // prevent re-injecting
 
-  if (!jcrop) {
-    image(() => init(() => {
+    if (!jcrop) {
+      image(() => init(() => {
+        overlay()
+        capture()
+      }))
+    }
+    else {
       overlay()
-      capture()
-    }))
+      capture(true)
+    }
   }
-  else {
-    overlay()
-    capture(true)
-  }
-}
 return true
 })

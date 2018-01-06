@@ -3,11 +3,11 @@
 
 chrome.storage.sync.get((config) => {
   if (!config.method) {
-  chrome.storage.sync.set({method: 'crop'})
-}
-if (config.dpr === undefined) {
-  chrome.storage.sync.set({dpr: true})
-}
+  	chrome.storage.sync.set({method: 'crop'})
+	}
+	if (config.dpr === undefined) {
+  	chrome.storage.sync.set({dpr: true})
+	}
 })
 
 function inject (tab) {
@@ -19,16 +19,16 @@ function inject (tab) {
 
   var timeout = setTimeout(() => {
     chrome.tabs.insertCSS(tab.id, {file: 'vendor/jquery.Jcrop.min.css', runAt: 'document_start'})
-  chrome.tabs.insertCSS(tab.id, {file: 'css/content.css', runAt: 'document_start'})
+    chrome.tabs.insertCSS(tab.id, {file: 'css/content.css', runAt: 'document_start'})
 
-  chrome.tabs.executeScript(tab.id, {file: 'vendor/jquery.min.js', runAt: 'document_start'})
-  chrome.tabs.executeScript(tab.id, {file: 'vendor/jquery.Jcrop.min.js', runAt: 'document_start'})
-  chrome.tabs.executeScript(tab.id, {file: 'content/content.js', runAt: 'document_start'})
+    chrome.tabs.executeScript(tab.id, {file: 'vendor/jquery.min.js', runAt: 'document_start'})
+    chrome.tabs.executeScript(tab.id, {file: 'vendor/jquery.Jcrop.min.js', runAt: 'document_start'})
+    chrome.tabs.executeScript(tab.id, {file: 'content/content.js', runAt: 'document_start'})
 
-  setTimeout(() => {
-    chrome.tabs.sendMessage(tab.id, {message: 'init'})
-}, 100)
-}, 100)
+    setTimeout(() => {
+      chrome.tabs.sendMessage(tab.id, {message: 'init'})
+    }, 100)
+  }, 100)
 }
 
 chrome.browserAction.onClicked.addListener((tab) => {
@@ -37,66 +37,66 @@ chrome.browserAction.onClicked.addListener((tab) => {
 
 chrome.commands.onCommand.addListener((command) => {
   if (command === 'take-screenshot') {
-  chrome.tabs.getSelected(null, (tab) => {
-    inject(tab)
-  })
-}
+  	chrome.tabs.getSelected(null, (tab) => {
+    	inject(tab)
+  	})
+	}
 })
 
 chrome.runtime.onMessage.addListener((req, sender, res) => {
   if (req.message === 'capture') {
-  chrome.tabs.getSelected(null, (tab) => {
+  	chrome.tabs.getSelected(null, (tab) => {
 
-    chrome.tabs.captureVisibleTab(tab.windowId, {format: 'jpeg'}, (image) => {
-    // image is base64
+    	chrome.tabs.captureVisibleTab(tab.windowId, {format: 'jpeg'}, (image) => {
+    	// image is base64
 
-    chrome.storage.sync.get((config) => {
-    if (config.method === 'view') {
-    if (req.dpr !== 1 && !config.dpr) {
-      crop(image, req.area, req.dpr, config.dpr, (cropped) => {
-        res({message: 'image', image: cropped})
-      })
-    }
-    else {
-      res({message: 'image', image: image})
-    }
-  }
-else {
-    crop(image, req.area, req.dpr, config.dpr, (cropped) => {
-      res({message: 'image', image: cropped})
-    })
-  }
-})
-})
-})
+    	chrome.storage.sync.get((config) => {
+    		if (config.method === 'view') {
+    			if (req.dpr !== 1 && !config.dpr) {
+      			crop(image, req.area, req.dpr, config.dpr, (cropped) => {
+        			res({message: 'image', image: cropped})
+      			})
+    			}
+    			else {
+      			res({message: 'image', image: image})
+    			}
+  			}
+				else {
+  			  crop(image, req.area, req.dpr, config.dpr, (cropped) => {
+      			res({message: 'image', image: cropped})
+    			})
+  			}
+			})
+		})
+	})
 }
 else if (req.message === 'active') {
   if (req.active) {
     chrome.storage.sync.get((config) => {
       if (config.method === 'view') {
-      chrome.browserAction.setTitle({tabId: sender.tab.id, title: 'Capture Viewport'})
-      chrome.browserAction.setBadgeText({tabId: sender.tab.id, text: '⬒'})
-    }
+  	    chrome.browserAction.setTitle({tabId: sender.tab.id, title: 'Capture Viewport'})
+  	    chrome.browserAction.setBadgeText({tabId: sender.tab.id, text: '⬒'})
+  		}
     // else if (config.method === 'full') {
     //   chrome.browserAction.setTitle({tabId: sender.tab.id, title: 'Capture Document'})
     //   chrome.browserAction.setBadgeText({tabId: sender.tab.id, text: '⬛'})
     // }
-  else if (config.method === 'crop') {
-      chrome.browserAction.setTitle({tabId: sender.tab.id, title: 'Crop and Save'})
-      chrome.browserAction.setBadgeText({tabId: sender.tab.id, text: '◩'})
-    }
-    else if (config.method === 'wait') {
-      chrome.browserAction.setTitle({tabId: sender.tab.id, title: 'Crop and Wait'})
-      chrome.browserAction.setBadgeText({tabId: sender.tab.id, text: '◪'})
-    }
-  })
+  		else if (config.method === 'crop') {
+    		chrome.browserAction.setTitle({tabId: sender.tab.id, title: 'Crop and Save'})
+    		chrome.browserAction.setBadgeText({tabId: sender.tab.id, text: '◩'})
+  		}
+    	else if (config.method === 'wait') {
+      	chrome.browserAction.setTitle({tabId: sender.tab.id, title: 'Crop and Wait'})
+      	chrome.browserAction.setBadgeText({tabId: sender.tab.id, text: '◪'})
+    	}
+  	})
   }
   else {
-    chrome.browserAction.setTitle({tabId: sender.tab.id, title: 'Screenshot Capture'})
+    chrome.browserAction.setTitle({tabId: sender.tab.id, title: 'CropShop'})
     chrome.browserAction.setBadgeText({tabId: sender.tab.id, text: ''})
   }
 }
-else if(req.message == 'search_urls'){
+else if(req.message == 'search_urls') {
   for(var i = 0; i < 3; i++){
     chrome.tabs.create({
       url: req.urls[i],
@@ -104,6 +104,7 @@ else if(req.message == 'search_urls'){
     })
   }
 }
+
 return true
 })
 
