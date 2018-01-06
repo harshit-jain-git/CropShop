@@ -150,14 +150,13 @@ function thread_genius(getUrl) {
     type: 'POST',
     contentType: 'application/json',
     processData: false,
-    data: '{"image": {"base64": base64_image}}',
+    data: '{"image": {"base64": "' + base64_image + '"}}',
     success: function (data) {
       var query = "";
       var tags = data.response.prediction.data.tags;
       for(var i = 0; i < 4; i++) {
         query += tags[i].name + " ";
       }
-      console.log(query);
       getUrl("https://www.googleapis.com/customsearch/v1?key= AIzaSyDYiO4T58S8k11u-PpvTCy1bT71h7kzPbQ&cx=005433110352445806458:ben4cv6cbgs&q=" + query, AnalyzeJson);
     },
     error: function(){
