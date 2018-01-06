@@ -47,7 +47,7 @@ chrome.runtime.onMessage.addListener((req, sender, res) => {
   if (req.message === 'capture') {
     chrome.tabs.getSelected(null, (tab) => {
 
-      chrome.tabs.captureVisibleTab(tab.windowId, {format: 'png'}, (image) => {
+      chrome.tabs.captureVisibleTab(tab.windowId, {format: 'jpeg'}, (image) => {
         // image is base64
 
         chrome.storage.sync.get((config) => {
@@ -125,7 +125,7 @@ function crop (image, area, dpr, preserve, done) {
       w, h
     )
 
-    var cropped = canvas.toDataURL('image/png')
+    var cropped = canvas.toDataURL('image/jpeg')
     done(cropped)
   }
   img.src = image

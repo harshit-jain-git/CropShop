@@ -105,69 +105,67 @@ var filename = () => {
     + ' - ' +
     [pad(now.getHours()), pad(now.getMinutes()), pad(now.getSeconds())].join('-')
   )(new Date())
-  return 'Screenshot Capture - ' + timestamp + '.png'
+  return 'Screenshot Capture - ' + timestamp + '.jpeg'
 }
 
-var global_image;
-
+var base64_image="";
 // code to download the image
 var save = (image) => {
   var link = document.createElement('a')
   link.download = filename()
   link.href = image
-  global_image = image
+  base64_image = image.substring(23)
   // link.click()
-  processImage()
+  thread_genius(httpGetAsync)
 }
 
+function AnalyzeJson(obj)
+{
+  var urls = [];
+  var items = JSON.parse(obj).items;
+  for(var i = 0; i < 10; i++) {
+    urls.push(items[i].link);
+  }
+  console.log(urls);
+}
 
-function processImage() {
-  
-        // Replace the subscriptionKey string value with your valid subscription key.
-        var subscriptionKey = "fa3347adf4584ce08b9c1fb054bd8bc9"; // Updated
+function httpGetAsync(theUrl, callback)
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() { 
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText);
+    }
+    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+    xmlHttp.send(null);
+}
 
-        // Replace or verify the region.
-        var uriBase = "https://southeastasia.api.cognitive.microsoft.com/vision/v1.0/analyze";
-
-        // Request parameters.
-        var params = {
-            "visualFeatures": "Categories,Description,Color",
-            "details": "",
-            "language": "en",
-        };
-
-        // Display the image.
-        // console.log(global_image);
-        
-        // Perform the REST API call.
-        $.ajax({
-            url: uriBase + "?" + $.param(params),
-
-            // Request headers.
-            beforeSend: function(xhrObj){
-                xhrObj.setRequestHeader("Content-Type","application/octet-stream");
-                xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", subscriptionKey);
-            },
-
-            type: "POST",
-            processData: false,
-            contentType: 'application/octet-stream',
-            data: makeblob(global_image)
-
-        })
-
-        .done(function(data) {
-            // Show formatted JSON on webpage.
-            console.log(JSON.stringify(data, null, 2));
-        })
-
-        .fail(function(jqXHR, textStatus, errorThrown) {
-            // Display error message.
-            var errorString = (errorThrown === "") ? "Error. " : errorThrown + " (" + jqXHR.status + "): ";
-            errorString += (jqXHR.responseText === "") ? "" : jQuery.parseJSON(jqXHR.responseText).message;
-            alert(errorString);
-        });
-    };
+var ajaxRequest;
+function thread_genius(getUrl) {
+  ajaxRequest = {
+    url: "https://api.threadgenius.co/v1/prediction/tag",
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader("Authorization", "Basic " + btoa("key_NTQ1NWFhZTZkMjYzMWU0MDExNjE0ZWI1M2Y0NDFm:"));
+    },
+    type: 'POST',
+    contentType: 'application/json',
+    processData: false,
+    data: '{"image": {"base64": base64_image}}',
+    success: function (data) {
+      var query = "";
+      var tags = data.response.prediction.data.tags;
+      for(var i = 0; i < 4; i++) {
+        query += tags[i].name + " ";
+      }
+      console.log(query);
+      getUrl("https://www.googleapis.com/customsearch/v1?key= AIzaSyDYiO4T58S8k11u-PpvTCy1bT71h7kzPbQ&cx=005433110352445806458:ben4cv6cbgs&q=" + query, AnalyzeJson);
+    },
+    error: function(){
+      console.log("Cannot get data");
+    }
+  }
+  $.ajax(ajaxRequest)
+}
 
 window.addEventListener('resize', ((timeout) => () => {
   clearTimeout(timeout)
