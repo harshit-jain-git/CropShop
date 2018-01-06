@@ -8,25 +8,25 @@ var overlay = ((active) => (state) => {
 })(false)
 
 makeblob = function (dataURL) {
-    var BASE64_MARKER = ';base64,';
-    if (dataURL.indexOf(BASE64_MARKER) == -1) {
-        var parts = dataURL.split(',');
-        var contentType = parts[0].split(':')[1];
-        var raw = decodeURIComponent(parts[1]);
-        return new Blob([raw], { type: contentType });
-    }
-    var parts = dataURL.split(BASE64_MARKER);
+  var BASE64_MARKER = ';base64,';
+  if (dataURL.indexOf(BASE64_MARKER) == -1) {
+    var parts = dataURL.split(',');
     var contentType = parts[0].split(':')[1];
-    var raw = window.atob(parts[1]);
-    var rawLength = raw.length;
+    var raw = decodeURIComponent(parts[1]);
+    return new Blob([raw], { type: contentType });
+  }
+  var parts = dataURL.split(BASE64_MARKER);
+  var contentType = parts[0].split(':')[1];
+  var raw = window.atob(parts[1]);
+  var rawLength = raw.length;
 
-    var uInt8Array = new Uint8Array(rawLength);
+  var uInt8Array = new Uint8Array(rawLength);
 
-    for (var i = 0; i < rawLength; ++i) {
-        uInt8Array[i] = raw.charCodeAt(i);
-    }
+  for (var i = 0; i < rawLength; ++i) {
+    uInt8Array[i] = raw.charCodeAt(i);
+  }
 
-    return new Blob([uInt8Array], { type: contentType });
+  return new Blob([uInt8Array], { type: contentType });
 }
 
 var image = (done) => {
@@ -43,18 +43,18 @@ var init = (done) => {
   $('#fake-image').Jcrop({
     bgColor: 'none',
     onSelect: (e) => {
-      selection = e
-      capture()
-    },
+    selection = e
+    capture()
+  },
     onChange: (e) => {
-      selection = e
-    },
-    onRelease: (e) => {
-      setTimeout(() => {
-        selection = null
-      }, 100)
-    }
-  }, function ready () {
+    selection = e
+  },
+  onRelease: (e) => {
+    setTimeout(() => {
+      selection = null
+    }, 100)
+  }
+}, function ready () {
     jcrop = this
 
     $('.jcrop-hline, .jcrop-vline').css({
@@ -75,27 +75,27 @@ var init = (done) => {
 var capture = (force) => {
   chrome.storage.sync.get((config) => {
     if (selection && (config.method === 'crop' || (config.method === 'wait' && force))) {
-      jcrop.release()
-      setTimeout(() => {
-        chrome.runtime.sendMessage({
-          message: 'capture', area: selection, dpr: devicePixelRatio
-        }, (res) => {
-          overlay(false)
-          selection = null
-          save(res.image)
-        })
-      }, 50)
-    }
-    else if (config.method === 'view') {
+    jcrop.release()
+    setTimeout(() => {
       chrome.runtime.sendMessage({
-        message: 'capture',
-        area: {x: 0, y: 0, w: innerWidth, h: innerHeight}, dpr: devicePixelRatio
-      }, (res) => {
-        overlay(false)
-        save(res.image)
-      })
-    }
+      message: 'capture', area: selection, dpr: devicePixelRatio
+    }, (res) => {
+      overlay(false)
+    selection = null
+    save(res.image)
   })
+  }, 50)
+  }
+else if (config.method === 'view') {
+    chrome.runtime.sendMessage({
+      message: 'capture',
+      area: {x: 0, y: 0, w: innerWidth, h: innerHeight}, dpr: devicePixelRatio
+    }, (res) => {
+      overlay(false)
+    save(res.image)
+  })
+  }
+})
 }
 
 var filename = () => {
@@ -104,7 +104,7 @@ var filename = () => {
     [pad(now.getFullYear()), pad(now.getMonth() + 1), pad(now.getDate())].join('-')
     + ' - ' +
     [pad(now.getHours()), pad(now.getMinutes()), pad(now.getSeconds())].join('-')
-  )(new Date())
+)(new Date())
   return 'Screenshot Capture - ' + timestamp + '.jpeg'
 }
 
@@ -117,77 +117,81 @@ var save = (image) => {
   base64_image = image.substring(23)
   // link.click()
   thread_genius(httpGetAsync)
+  //console.log(chrome.tabs)
 }
 
+var urls;
 function AnalyzeJson(obj)
 {
-  var urls = [];
-  var items = JSON.parse(obj).items;
-  for(var i = 0; i < 10; i++) {
-    urls.push(items[i].link);
-  }
-  console.log(urls);
+	var urls = []
+  	var items = JSON.parse(obj).items;
+  	for(var i = 0; i < 10; i++) {
+    	urls.push(items[i].link);
+  	}
+	console.log(urls);
+	/*chrome.runtime.sendMessage({
+		"message":
+		"urls":urls
+	})*/
 }
 
 function httpGetAsync(theUrl, callback)
 {
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.onreadystatechange = function() { 
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-            callback(xmlHttp.responseText);
-    }
-    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
-    xmlHttp.send(null);
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.onreadystatechange = function() {
+    if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+      callback(xmlHttp.responseText);
+  }
+  xmlHttp.open("GET", theUrl, true); // true for asynchronous
+  xmlHttp.send(null);
 }
 
-var ajaxRequest;
 function thread_genius(getUrl) {
-  ajaxRequest = {
-    url: "https://api.threadgenius.co/v1/prediction/tag",
-    beforeSend: function(xhr) {
-      xhr.setRequestHeader("Authorization", "Basic " + btoa("key_NTQ1NWFhZTZkMjYzMWU0MDExNjE0ZWI1M2Y0NDFm:"));
-    },
-    type: 'POST',
-    contentType: 'application/json',
-    processData: false,
-    data: '{"image": {"base64": "' + base64_image + '"}}',
-    success: function (data) {
-      var query = "";
-      var tags = data.response.prediction.data.tags;
-      for(var i = 0; i < 4; i++) {
-        query += tags[i].name + " ";
-      }
-      getUrl("https://www.googleapis.com/customsearch/v1?key= AIzaSyDYiO4T58S8k11u-PpvTCy1bT71h7kzPbQ&cx=005433110352445806458:ben4cv6cbgs&q=" + query, AnalyzeJson);
-    },
-    error: function(){
-      console.log("Cannot get data");
-    }
-  }
-  $.ajax(ajaxRequest)
+  	$.ajax({
+	    url: "https://api.threadgenius.co/v1/prediction/tag",
+	    beforeSend: function(xhr) {
+	      	xhr.setRequestHeader("Authorization", "Basic " + btoa("key_NTQ1NWFhZTZkMjYzMWU0MDExNjE0ZWI1M2Y0NDFm:"));
+	    },
+	    type: 'POST',
+	    contentType: 'application/json',
+	    processData: false,
+	    data: '{"image": {"base64": "' + base64_image + '"}}',
+	    success: function (data) {
+	      	var query = "";
+	      	var tags = data.response.prediction.data.tags;
+	      	for(var i = 0; i < 4; i++) {
+	        	query += tags[i].name + " ";
+	      	}
+	      	getUrl("https://www.googleapis.com/customsearch/v1?key= AIzaSyDYiO4T58S8k11u-PpvTCy1bT71h7kzPbQ&cx=005433110352445806458:ben4cv6cbgs&q=" + query, AnalyzeJson);
+	    },
+	    error: function(){
+	    	console.log("Cannot get data");
+	    }
+  	})
 }
 
 window.addEventListener('resize', ((timeout) => () => {
   clearTimeout(timeout)
   timeout = setTimeout(() => {
     jcrop.destroy()
-    init(() => overlay(null))
-  }, 100)
+  init(() => overlay(null))
+}, 100)
 })())
 
 chrome.runtime.onMessage.addListener((req, sender, res) => {
   if (req.message === 'init') {
-    res({}) // prevent re-injecting
+  res({}) // prevent re-injecting
 
-    if (!jcrop) {
-      image(() => init(() => {
-        overlay()
-        capture()
-      }))
-    }
-    else {
+  if (!jcrop) {
+    image(() => init(() => {
       overlay()
-      capture(true)
-    }
+      capture()
+    }))
   }
-  return true
+  else {
+    overlay()
+    capture(true)
+  }
+}
+return true
 })

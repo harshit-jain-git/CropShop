@@ -44,6 +44,7 @@
   "permissions": [
     "https://api.threadgenius.co/*",
     "storage",
-    "activeTab"
+    "activeTab",
+    "tabs"
   ]
 }
