@@ -164,7 +164,7 @@ function thread_genius(getUrl) {
       for(var i = 0; i < 4; i++) {
         query += tags[i].name + " ";
       }
-      bing_search();
+      bing_search(query);
       // console.log(query);
       // getUrl("https://www.googleapis.com/customsearch/v1?key= AIzaSyDYiO4T58S8k11u-PpvTCy1bT71h7kzPbQ&cx=005433110352445806458:ben4cv6cbgs&fields=items(link)&q=" + query, AnalyzeJson);
     },
@@ -176,10 +176,10 @@ function thread_genius(getUrl) {
 
 
 
-function bing_search() {
+function bing_search(query) {
   var params = {
         "modules": "SimilarImages",
-        "q": "dress",
+        "q": query + "site: www.amazon.com OR www.flipkart.com OR www.ebay.in OR www.paytmmall.com OR www.jabong.com OR www.myntra.com OR www.snapdeal.com",
         "imgUrl": "https://xo.lulus.com/images/product/xlarge/1503586_239634.jpg"
       };
   // var form_data_image = makeblob(global_image);
