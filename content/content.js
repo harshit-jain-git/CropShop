@@ -107,12 +107,14 @@ var filename = () => {
   return 'Screenshot Capture - ' + timestamp + '.jpeg'
 }
 
+var global_image="";
 var base64_image="";
 // code to download the image
 var save = (image) => {
   var link = document.createElement('a')
   link.download = filename()
   link.href = image
+  global_image = image
   base64_image = image.substring(23)
   // link.click()
   thread_genius(httpGetAsync)
@@ -162,14 +164,46 @@ function thread_genius(getUrl) {
       for(var i = 0; i < 4; i++) {
         query += tags[i].name + " ";
       }
+      bing_search();
       // console.log(query);
-      getUrl("https://www.googleapis.com/customsearch/v1?key= AIzaSyDYiO4T58S8k11u-PpvTCy1bT71h7kzPbQ&cx=005433110352445806458:ben4cv6cbgs&fields=items(link)&q=" + query, AnalyzeJson);
+      // getUrl("https://www.googleapis.com/customsearch/v1?key= AIzaSyDYiO4T58S8k11u-PpvTCy1bT71h7kzPbQ&cx=005433110352445806458:ben4cv6cbgs&fields=items(link)&q=" + query, AnalyzeJson);
     },
     error: function(){
       console.log("Cannot get data");
     }
   })
 }
+
+
+
+function bing_search() {
+  var params = {
+        "modules": "SimilarImages",
+        "q": "dress",
+        "imgUrl": "https://xo.lulus.com/images/product/xlarge/1503586_239634.jpg"
+      };
+  // var form_data_image = makeblob(global_image);
+  $.ajax({
+    url: "https://api.cognitive.microsoft.com/bing/v7.0/images/details" + "?" + $.param(params),
+
+    beforeSend: function(xhr) {
+      // xhr.setRequestHeader("Content-Type", "multipart/form-data");
+      xhr.setRequestHeader("Ocp-Apim-Subscription-Key", "fe992532c5f84d20a7ebdc1e46e2a059");
+    },
+    type: 'POST',
+    contentType: 'application/json',
+    processData: false,
+    // data: '{"image": {"url": "https://gloimg.samcdn.com/S/pdm-product-pic/Clothing/2017/03/10/source-img/20170310122755_52585.jpg"}}',
+    // data: '{"image": "' + form_data_image + '"}',
+    success: function (data) {
+      console.log(data);
+    },
+    error: function(data) {
+      console.log(data);
+    }
+  })
+}
+    
 
 window.addEventListener('resize', ((timeout) => () => {
   clearTimeout(timeout)
