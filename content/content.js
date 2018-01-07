@@ -122,11 +122,13 @@ var save = (image) => {
 var urls;
 function AnalyzeJson(obj)
 {
-  var urls = []
+  // console.log(obj);
+  urls = [];
   var items = JSON.parse(obj).items;
   for(var i = 0; i < 10; i++) {
     urls.push(items[i].link);
   }
+  // console.log(urls)
   chrome.runtime.sendMessage({
     message: 'search_urls',
     urls: urls
@@ -155,12 +157,13 @@ function thread_genius(getUrl) {
     processData: false,
     data: '{"image": {"base64": "' + base64_image + '"}}',
     success: function (data) {
-      var query = "";
+      var query = "dress ";
       var tags = data.response.prediction.data.tags;
-      for(var i = 0; i < 4; i++) {
+      for(var i = 0; i < 6; i++) {
         query += tags[i].name + " ";
       }
-      getUrl("https://www.googleapis.com/customsearch/v1?key= AIzaSyDYiO4T58S8k11u-PpvTCy1bT71h7kzPbQ&cx=005433110352445806458:ben4cv6cbgs&q=" + query, AnalyzeJson);
+      // console.log(query);
+      getUrl("https://www.googleapis.com/customsearch/v1?key= AIzaSyDYiO4T58S8k11u-PpvTCy1bT71h7kzPbQ&cx=005433110352445806458:ben4cv6cbgs&fields=items(link)&q=" + query, AnalyzeJson);
     },
     error: function(){
       console.log("Cannot get data");
