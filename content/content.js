@@ -162,8 +162,8 @@ function thread_genius(getUrl) {
       for(var i = 0; i < 4; i++) {
         query += tags[i].name + " ";
       }
-      // console.log(query);
-      getUrl("https://www.googleapis.com/customsearch/v1?key= AIzaSyDYiO4T58S8k11u-PpvTCy1bT71h7kzPbQ&cx=005433110352445806458:ben4cv6cbgs&fields=items(link)&q=" + query, AnalyzeJson);
+      console.log(query);
+      getUrl("https://www.googleapis.com/customsearch/v1?key= AIzaSyDYaHCU2-IXomCtfJHli2vbTFz_dpYJb_A&cx=006353239659194249938:xgm5kysoak8&fields=items(link)&q=" + query, AnalyzeJson);
     },
     error: function(){
       console.log("Cannot get data");
