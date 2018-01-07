@@ -125,7 +125,7 @@ function AnalyzeJson(obj)
   // console.log(obj);
   urls = [];
   var items = JSON.parse(obj).items;
-  for(var i = 0; i < 10; i++) {
+  for(var i = 0; i < items.length; i++) {
     urls.push(items[i].link);
   }
   // console.log(urls)
@@ -159,7 +159,7 @@ function thread_genius(getUrl) {
     success: function (data) {
       var query = "dress ";
       var tags = data.response.prediction.data.tags;
-      for(var i = 0; i < 6; i++) {
+      for(var i = 0; i < 4; i++) {
         query += tags[i].name + " ";
       }
       // console.log(query);
