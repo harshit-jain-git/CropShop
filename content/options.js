@@ -51,7 +51,7 @@ var onupdate = (type) => (vnode) => {
   }
 }
 
-m.mount(document.querySelector('main'), {
+/*m.mount(document.querySelector('main'), {
   view: () =>
     m('.mdl-grid',
       m('.mdl-cell mdl-cell--8-col-tablet mdl-cell--12-col-desktop',
@@ -113,3 +113,4 @@ m.mount(document.querySelector('main'), {
       )
     )
 })
+*/
