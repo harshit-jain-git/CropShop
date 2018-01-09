@@ -98,3 +98,13 @@ code { background: #ececec; padding: 5px; border-radius: 5px; }
 .bs-callout .mdl-cell {
   margin-left: 0px;
 }
+
+/*main*/
+main.mdl-layout__content{
+  padding: 20px;
+}
+
+/*save button*/
+#save{
+  margin: 10px 0;
+}

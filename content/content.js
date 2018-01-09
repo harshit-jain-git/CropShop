@@ -122,16 +122,22 @@ var save = (image) => {
 var urls;
 function AnalyzeJson(obj)
 {
-  // console.log(obj);
+  //console.log(obj);
   urls = [];
   var items = JSON.parse(obj).items;
   for(var i = 0; i < items.length; i++) {
     urls.push(items[i].link);
   }
-  // console.log(urls)
-  chrome.runtime.sendMessage({
-    message: 'search_urls',
-    urls: urls
+  var numberOfTabs;
+  chrome.storage.sync.get(function(obj){
+    numberOfTabs =  obj.numberOfTabs;
+    console.log(numberOfTabs);
+    console.log(urls.length);
+    chrome.runtime.sendMessage({
+      message: 'search_urls',
+      urls: urls,
+      numberOfTabs : numberOfTabs
+    })
   })
 }
 
