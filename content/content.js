@@ -122,17 +122,17 @@ var save = (image) => {
   //console.log(chrome.tabs)
 }
 
+var google_query = "";
 var urls=[];
 var google_url;
-var dress_color;
 function AnalyzeJson(obj)
 {
   var items = JSON.parse(obj).items;
-  for(var i = 0; i < items.length; i++) {
-    urls.push(items[i].link);
-  }
+  if(items !== undefined) 
+    for(var i = 0; i < items.length; i++) {
+      urls.push(items[i].link);
+    }
   // console.log(urls)
-  
 }
 
 function httpGetAsync(theUrl, callback)
@@ -158,7 +158,7 @@ function uploadImage() {
     data: jpeg_image_blob,
     success: function (data) {
       // console.log(JSON.stringify(data));
-      google_url = "http://www.google.com/searchbyimage?image_url=" + data.output.url + "&q=site:www.amazon.in OR www.flipkart.com " + dress_color;
+      google_url = "http://www.google.com/searchbyimage?image_url=" + data.output.url + "&q=site:www.amazon.in OR www.flipkart.com " + google_query;
       urls.reverse(); urls.push(google_url);  urls.reverse();
       // console.log(urls);
       var numberOfTabs;
@@ -192,8 +192,9 @@ function thread_genius(getUrl) {
       // console.log(data);
       var query = "dress ";
       var tags = data.response.prediction.data.tags;
+      // console.log(tags);
       for(var i = 0; i < 4; i++) {
-        if (tags[i].type == 'color') {dress_color = tags[i].name;}
+        if (tags[i].type == 'color' || tags[i].type == 'detail') {google_query += tags[i].name + " ";}
         query += tags[i].name + " ";
       }
       getUrl("https://www.googleapis.com/customsearch/v1?key= AIzaSyDYaHCU2-IXomCtfJHli2vbTFz_dpYJb_A&cx=006353239659194249938:xgm5kysoak8&fields=items(link)&q=" + query, AnalyzeJson);
