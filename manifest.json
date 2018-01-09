@@ -42,8 +42,10 @@
   },
 
   "permissions": [
+    "https://api.tinify.com/*",
     "https://api.threadgenius.co/*",
     "storage",
+    "downloads",
     "activeTab",
     "tabs"
   ]

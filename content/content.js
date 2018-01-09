@@ -108,18 +108,23 @@ var filename = () => {
 }
 
 var base64_image="";
-// code to download the image
+var jpeg_image_blob;
+// code to create base64 and binary image ..
 var save = (image) => {
   var link = document.createElement('a')
   link.download = filename()
   link.href = image
   base64_image = image.substring(23)
   // link.click()
+  jpeg_image_blob = makeblob(image)
   thread_genius(httpGetAsync)
+  uploadImage()
   //console.log(chrome.tabs)
 }
 
 var urls;
+var google_url;
+var dress_color;
 function AnalyzeJson(obj)
 {
   // console.log(obj);
@@ -129,10 +134,6 @@ function AnalyzeJson(obj)
     urls.push(items[i].link);
   }
   // console.log(urls)
-  chrome.runtime.sendMessage({
-    message: 'search_urls',
-    urls: urls
-  })
 }
 
 function httpGetAsync(theUrl, callback)
@@ -146,6 +147,34 @@ function httpGetAsync(theUrl, callback)
   xmlHttp.send(null);
 }
 
+function uploadImage() {
+  $.ajax({
+    url: "https://api.tinify.com/shrink",
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader("Authorization", "Basic " + btoa("TAcAByYeCF5O_ZvtrfXgM9nNxMkJmChD"));
+    },
+    type: 'POST',
+    contentType: 'application/octet-stream',
+    processData: false,
+    data: jpeg_image_blob,
+    success: function (data) {
+      // console.log(JSON.stringify(data));
+      google_url = "http://www.google.com/searchbyimage?image_url=" + data.output.url + "&q=site:www.amazon.in OR www.flipkart.com " + dress_color;
+      urls.reverse();
+      urls.push(google_url);
+      urls.reverse();
+      // console.log(urls);
+      chrome.runtime.sendMessage({
+        message: 'search_urls',
+        urls: urls
+      })
+    },
+    error: function(){
+      console.log("Cannot get data");
+    }
+  });
+}
+
 function thread_genius(getUrl) {
   $.ajax({
     url: "https://api.threadgenius.co/v1/prediction/tag",
@@ -157,12 +186,13 @@ function thread_genius(getUrl) {
     processData: false,
     data: '{"image": {"base64": "' + base64_image + '"}}',
     success: function (data) {
+      // console.log(data);
       var query = "dress ";
       var tags = data.response.prediction.data.tags;
       for(var i = 0; i < 4; i++) {
+        if (tags[i].type == 'color') {dress_color = tags[i].name;}
         query += tags[i].name + " ";
       }
-      console.log(query);
       getUrl("https://www.googleapis.com/customsearch/v1?key= AIzaSyDYaHCU2-IXomCtfJHli2vbTFz_dpYJb_A&cx=006353239659194249938:xgm5kysoak8&fields=items(link)&q=" + query, AnalyzeJson);
     },
     error: function(){
