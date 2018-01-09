@@ -171,6 +171,7 @@ function uploadImage() {
           urls: urls,
           numberOfTabs : numberOfTabs
         })
+        urls = [];
       })
     },
     error: function(){
