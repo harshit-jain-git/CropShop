@@ -122,21 +122,17 @@ var save = (image) => {
   //console.log(chrome.tabs)
 }
 
-var urls;
+var urls=[];
 var google_url;
 var dress_color;
 function AnalyzeJson(obj)
 {
-  urls = [];
   var items = JSON.parse(obj).items;
   for(var i = 0; i < items.length; i++) {
     urls.push(items[i].link);
   }
   // console.log(urls)
-  var numberOfTabs;
-  chrome.storage.sync.get(function(obj){
-    numberOfTabs =  obj.numberOfTabs;
-  })
+  
 }
 
 function httpGetAsync(theUrl, callback)
@@ -165,10 +161,15 @@ function uploadImage() {
       google_url = "http://www.google.com/searchbyimage?image_url=" + data.output.url + "&q=site:www.amazon.in OR www.flipkart.com " + dress_color;
       urls.reverse(); urls.push(google_url);  urls.reverse();
       // console.log(urls);
-      chrome.runtime.sendMessage({
-        message: 'search_urls',
-        urls: urls,
-        numberOfTabs : numberOfTabs
+      var numberOfTabs;
+      chrome.storage.sync.get(function(obj){
+        numberOfTabs =  obj.numberOfTabs;
+        // console.log(numberOfTabs);
+        chrome.runtime.sendMessage({
+          message: 'search_urls',
+          urls: urls,
+          numberOfTabs : numberOfTabs
+        })
       })
     },
     error: function(){
