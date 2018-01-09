@@ -1,5 +1,6 @@
 
 var jcrop, selection
+var colors = ["black","green","pink","red","blue","orange","brown","violet","purple","indigo","magenta","yellow","while","grey"]
 
 var overlay = ((active) => (state) => {
   active = (typeof state === 'boolean') ? state : (state === null) ? active : !active
@@ -122,9 +123,9 @@ var save = (image) => {
   //console.log(chrome.tabs)
 }
 
-var google_query = "";
+var google_query = "dress ";
 var urls=[];
-var google_url;
+var amazon_url;
 function AnalyzeJson(obj)
 {
   var items = JSON.parse(obj).items;
@@ -158,8 +159,8 @@ function uploadImage() {
     data: jpeg_image_blob,
     success: function (data) {
       // console.log(JSON.stringify(data));
-      google_url = "http://www.google.com/searchbyimage?image_url=" + data.output.url + "&q=site:www.amazon.in OR www.flipkart.com " + google_query;
-      urls.reverse(); urls.push(google_url);  urls.reverse();
+      amazon_url = "http://www.google.com/searchbyimage?image_url=" + data.output.url + "&q=site:www.amazon.in " + google_query;
+      urls.reverse(); urls.push(amazon_url);	urls.reverse();
       // console.log(urls);
       var numberOfTabs;
       chrome.storage.sync.get(function(obj){
@@ -192,9 +193,22 @@ function thread_genius(getUrl) {
       // console.log(data);
       var query = "dress ";
       var tags = data.response.prediction.data.tags;
-      // console.log(tags);
+      console.log(tags);
       for(var i = 0; i < 4; i++) {
-        if (tags[i].type == 'color' || tags[i].type == 'detail') {google_query += tags[i].name + " ";}
+        if (tags[i].type == 'color') {
+        	var flag=0;
+      		var temp = tags[i].name.substring(6).split(" ");
+      		for(var j=0;j<temp.length;j++) {
+      			for(k=0;k<colors.length;k++) {
+      				if(colors[k]==temp[j]) {
+      					google_query+= colors[k];
+      					flag=1;
+      					break;
+      				}
+      			}
+      			if(flag==1) break;
+      		}
+        }
         query += tags[i].name + " ";
       }
       getUrl("https://www.googleapis.com/customsearch/v1?key= AIzaSyDYaHCU2-IXomCtfJHli2vbTFz_dpYJb_A&cx=006353239659194249938:xgm5kysoak8&fields=items(link)&q=" + query, AnalyzeJson);
