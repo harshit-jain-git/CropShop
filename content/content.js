@@ -165,6 +165,7 @@ function uploadImage() {
         message: 'search_urls',
         urls: urls,
       })
+      google_query = "dress "
     },
     error: function(){
       console.log("Cannot get data");
