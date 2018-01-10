@@ -4,6 +4,7 @@
 ## How to install
 
 - Download or clone this repository.
+- If it is downloaded in .zip format, extract the contents in a folder named 'CropShop'.
 - Navigate to chrome://extensions in your google chrome browser.
 - Enable Developer mode and then click on load unpacked extensions.
 - Now, select the repository folder from your pc and click ok.
