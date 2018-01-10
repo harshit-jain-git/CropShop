@@ -12,8 +12,6 @@
     "default_title": "CropShop"
   },
 
-  "options_page": "/content/options.html",
-
   "background" : {
     "scripts": [
       "background/background.js"

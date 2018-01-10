@@ -97,8 +97,7 @@ else if (req.message === 'active') {
   }
 }
 else if(req.message == 'search_urls') {
-  var numberOfTabs = req.numberOfTabs;
-  for(var i = 0; i < (req.urls.length > numberOfTabs ? numberOfTabs : req.urls.length); i++){
+  for(var i = 0; i < (req.urls.length > 3 ? 3 : req.urls.length); i++){
     chrome.tabs.create({
       url: req.urls[i],
       active: false

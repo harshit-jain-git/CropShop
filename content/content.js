@@ -107,7 +107,7 @@ var filename = () => {
 )(new Date())
   return 'Screenshot Capture - ' + timestamp + '.jpeg'
 }
-
+var urls=[];
 var base64_image="";
 var jpeg_image_blob;
 // code to create base64 and binary image ..
@@ -118,13 +118,12 @@ var save = (image) => {
   base64_image = image.substring(23)
   // link.click()
   jpeg_image_blob = makeblob(image)
+  urls = []
   thread_genius(httpGetAsync)
-  uploadImage()
   //console.log(chrome.tabs)
 }
 
 var google_query = "dress ";
-var urls=[];
 var amazon_url;
 function AnalyzeJson(obj)
 {
@@ -133,7 +132,7 @@ function AnalyzeJson(obj)
     for(var i = 0; i < items.length; i++) {
       urls.push(items[i].link);
     }
-  // console.log(urls)
+  uploadImage()
 }
 
 function httpGetAsync(theUrl, callback)
@@ -161,17 +160,10 @@ function uploadImage() {
       // console.log(JSON.stringify(data));
       amazon_url = "http://www.google.com/searchbyimage?image_url=" + data.output.url + "&q=site:www.amazon.in " + google_query;
       urls.reverse(); urls.push(amazon_url);	urls.reverse();
-      // console.log(urls);
-      var numberOfTabs;
-      chrome.storage.sync.get(function(obj){
-        numberOfTabs =  obj.numberOfTabs;
-        // console.log(numberOfTabs);
-        chrome.runtime.sendMessage({
-          message: 'search_urls',
-          urls: urls,
-          numberOfTabs : numberOfTabs
-        })
-        urls = [];
+      console.log(urls);
+      chrome.runtime.sendMessage({
+        message: 'search_urls',
+        urls: urls,
       })
     },
     error: function(){
@@ -194,7 +186,7 @@ function thread_genius(getUrl) {
       // console.log(data);
       var query = "dress ";
       var tags = data.response.prediction.data.tags;
-      console.log(tags);
+      // console.log(tags);
       for(var i = 0; i < 4; i++) {
         if (tags[i].type == 'color') {
         	var flag=0;
