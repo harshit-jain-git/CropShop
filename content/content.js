@@ -160,7 +160,7 @@ function uploadImage() {
       // console.log(JSON.stringify(data));
       amazon_url = "http://www.google.com/searchbyimage?image_url=" + data.output.url + "&q=site:www.amazon.in " + google_query;
       urls.reverse(); urls.push(amazon_url);	urls.reverse();
-      console.log(urls);
+      // console.log(urls);
       chrome.runtime.sendMessage({
         message: 'search_urls',
         urls: urls,
