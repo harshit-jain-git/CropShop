@@ -36,4 +36,4 @@
 
 ## Demo
 
-For a demo look at this [video](https://youtu.be/ShOKyBbVX7k)
+Watch the demo of the extension [here](https://youtu.be/ShOKyBbVX7k)
